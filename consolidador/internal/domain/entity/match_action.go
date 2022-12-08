@@ -12,13 +12,12 @@ type GameAction struct {
 	Score      int
 }
 
-func NewGameAction(playerID, playerName string, minute int, action string, score int) *GameAction {
+func NewGameAction(playerID string, minute int, action string, score int) *GameAction {
 	return &GameAction{
-		ID:         uuid.New().String(),
-		PlayerID:   playerID,
-		PlayerName: playerName,
-		Minute:     minute,
-		Action:     action,
-		Score:      score,
+		ID:       uuid.New().String(),
+		PlayerID: playerID,
+		Minute:   minute,
+		Action:   action,
+		Score:    score,
 	}
 }
