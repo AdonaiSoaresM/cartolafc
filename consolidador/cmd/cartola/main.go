@@ -2,10 +2,15 @@ package main
 
 import (
 	"consolidador/internal/infra/db"
+	httphandler "consolidador/internal/infra/http"
 	"consolidador/internal/infra/repository"
 	"consolidador/pkg/uow"
 	"context"
 	"database/sql"
+
+	"github.com/go-chi/chi"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -20,6 +25,9 @@ func main() {
 		panic(err)
 	}
 	registerRepositories(uow)
+
+	r := chi.NewRouter()
+	r.Get("/players", httphandler.ListPlayersHandler(ctx, *db.New(dtb)))
 }
 
 func registerRepositories(uow *uow.Uow) {
