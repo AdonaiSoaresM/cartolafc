@@ -7,9 +7,9 @@ import (
 	"consolidador/pkg/uow"
 	"context"
 	"database/sql"
+	"net/http"
 
 	"github.com/go-chi/chi"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -28,6 +28,15 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Get("/players", httphandler.ListPlayersHandler(ctx, *db.New(dtb)))
+	r.Get("/my-teams/{teamID}/players", httphandler.ListMyTeamPlayersHandler(ctx, *db.New(dtb)))
+	r.Get("/my-teams/{teamID}/balance", httphandler.GetMyTeamBalanceHandler(ctx, *db.New(dtb)))
+	r.Get("/matches", httphandler.ListMatchesHandler(ctx, repository.NewMatchRepository(dtb)))
+	r.Get("/matches/{matchID}", httphandler.ListMatchByIDHandler(ctx, repository.NewMatchRepository(dtb)))
+
+	//go http.ListenAndServe(":8081", r)
+	if err = http.ListenAndServe(":8081", r); err != nil {
+		panic(err)
+	}
 }
 
 func registerRepositories(uow *uow.Uow) {
